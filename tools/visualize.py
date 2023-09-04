@@ -112,7 +112,8 @@ def main():
     with torch.no_grad():
         input['inference_kwargs'] = {}
         output_list = []
-        output = model(**input)[0]['pred_motion']
+        output = model(**input)
+        output=output[0]['pred_motion']
         pred_motion = output.cpu().detach().numpy()
         pred_motion = pred_motion * std + mean
 

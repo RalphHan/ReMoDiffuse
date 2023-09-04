@@ -169,7 +169,8 @@ def plot_3d_motion(save_path, kinematic_tree, joints, title, figsize=(10, 10), f
     # (seq_len, joints_num, 3)
     data = joints.copy().reshape(len(joints), -1, 3)
     fig = plt.figure(figsize=figsize)
-    ax = p3.Axes3D(fig)
+    plt.tight_layout()
+    ax = fig.add_subplot(projection="3d")
     init()
     MINS = data.min(axis=0).min(axis=0)
     MAXS = data.max(axis=0).max(axis=0)
@@ -186,8 +187,7 @@ def plot_3d_motion(save_path, kinematic_tree, joints, title, figsize=(10, 10), f
     data[..., 2] -= data[:, 0:1, 2]
 
     def update(index):
-        ax.lines = []
-        ax.collections = []
+        ax.cla()
         ax.view_init(elev=120, azim=-90)
         ax.dist = 7.5
         plot_xzPlane(MINS[0] - trajec[index, 0], MAXS[0] - trajec[index, 0], 0, MINS[2] - trajec[index, 1],
