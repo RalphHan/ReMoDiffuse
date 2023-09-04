@@ -17,7 +17,7 @@ from mogen.models import build_architecture
 from mmcv.runner import load_checkpoint
 from mmcv.parallel import MMDataParallel
 from mogen.utils.plot_utils import recover_from_ric
-from scipy.ndimage import gaussian_filter
+import scipy.ndimage.filters as filters
 
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"],
@@ -74,7 +74,7 @@ def prompt2motion(text, motion_length, model, mean, std, device):
         pred_motion = output.cpu().detach()
         pred_motion = pred_motion * std + mean
     joint = recover_from_ric(pred_motion, 22).numpy()
-    joint = gaussian_filter(joint, sigma=2.5, mode="nearest")
+    joint=filters.gaussian_filter1d(joint, 2.5, axis=0, mode='nearest')
     return joint
 
 
